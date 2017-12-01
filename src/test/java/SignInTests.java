@@ -14,6 +14,7 @@ public class SignInTests {
         private WebDriver webDriver;
         private static ExtentReports report;
         private SignInPage signIn;
+        private SignUpPage signUp;
         private Actions builder;
 
         @BeforeClass
@@ -64,13 +65,39 @@ public class SignInTests {
         }
 
         @Test
-        public void createAccount() throws InterruptedException{
+        public void createAccountAttempt() throws InterruptedException{
+            String attemptEmail = "dsadasdas@gmail.com";
+            String attemptPass = "password";
+
             String emailWarn = "Please enter your email address";
-            String passWarn = "Please enter your email password";
+            String passWarn = "Please enter a password";
+            String passFormat = "Your password must be at least 8 characters long, containing at least one letter and at least one number or special character.";
 
             signIn.goToSignUp();
+            signUp = PageFactory.initElements(webDriver,SignUpPage.class);
+            Thread.sleep(2000);
+            signUp.createUser();
+            Assert.assertEquals(emailWarn,signUp.getEmailErr());
+            Assert.assertEquals(passWarn,signUp.getPassErr());
 
+            Thread.sleep(2000);
+            signUp.enterEmail(attemptEmail);
+            Assert.assertEquals(passWarn,signUp.getPassErr());
 
+            signUp.enterPass(attemptPass);
+            signUp.createUser();
+            Thread.sleep(2000);
+            Assert.assertEquals(passFormat,signUp.getPassFormatErr());
+        }
 
+        @Test
+        public void signInWithFacebook(){
+            signIn.launchFacebook();
+            for(String windowHandle : webDriver.getWindowHandles()){
+                webDriver.switchTo().window(windowHandle);
+            }
+            String newPage = webDriver.getTitle();
+            String expectedPage = "Facebook";
+            Assert.assertEquals(expectedPage,newPage);
         }
 }

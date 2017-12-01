@@ -18,6 +18,9 @@ public class SignInPage {
     @FindBy(css="#js-social__signup-tab > span")
     WebElement signUpForm;
 
+    @FindBy(css="#js-facebook__signin--button")
+    WebElement facebookLink;
+
     public void enterEmail(String email){
         emailField.sendKeys(email);
     }
@@ -36,5 +39,9 @@ public class SignInPage {
 
     public void goToSignUp(){
         signUpForm.click();
+    }
+
+    public void launchFacebook(){
+        facebookLink.click();
     }
 }
